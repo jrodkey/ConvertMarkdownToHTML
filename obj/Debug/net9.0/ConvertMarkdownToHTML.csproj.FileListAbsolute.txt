@@ -1,0 +1,14 @@
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\bin\Debug\net9.0\ConvertMarkdownToHTML.exe
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\bin\Debug\net9.0\ConvertMarkdownToHTML.deps.json
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\bin\Debug\net9.0\ConvertMarkdownToHTML.runtimeconfig.json
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\bin\Debug\net9.0\ConvertMarkdownToHTML.dll
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\bin\Debug\net9.0\ConvertMarkdownToHTML.pdb
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ConvertMarkdownToHTML.GeneratedMSBuildEditorConfig.editorconfig
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ConvertMarkdownToHTML.AssemblyInfoInputs.cache
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ConvertMarkdownToHTML.AssemblyInfo.cs
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ConvertMarkdownToHTML.csproj.CoreCompileInputs.cache
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ConvertMarkdownToHTML.dll
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\refint\ConvertMarkdownToHTML.dll
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ConvertMarkdownToHTML.pdb
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ConvertMarkdownToHTML.genruntimeconfig.cache
+d:\Development\Custom\BungieProgrammingTest\ConvertMarkdownToHTML\obj\Debug\net9.0\ref\ConvertMarkdownToHTML.dll
