@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using ConvertMarkdownToHTML.converters;
 
 namespace ConvertMarkdownToHTML
 {
@@ -19,8 +20,11 @@ namespace ConvertMarkdownToHTML
 
         public static void MarkdownToHtml(string inputMarkdownFilePath, out string outputMarkdownFilePath)
         {
+            HTMLConverter converter = new HTMLConverter();
             string[] loadedLines = File.ReadAllLines(inputMarkdownFilePath);
             outputMarkdownFilePath = string.Empty;
+
+            converter.Convert(loadedLines);
         }
     }
 }
