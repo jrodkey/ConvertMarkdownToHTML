@@ -1,0 +1,15 @@
+c:\Development\Custom\ConvertMarkdownToHTML\bin\Debug\net8.0\ConvertMarkdownToHTML.exe
+c:\Development\Custom\ConvertMarkdownToHTML\bin\Debug\net8.0\ConvertMarkdownToHTML.deps.json
+c:\Development\Custom\ConvertMarkdownToHTML\bin\Debug\net8.0\ConvertMarkdownToHTML.runtimeconfig.json
+c:\Development\Custom\ConvertMarkdownToHTML\bin\Debug\net8.0\ConvertMarkdownToHTML.dll
+c:\Development\Custom\ConvertMarkdownToHTML\bin\Debug\net8.0\ConvertMarkdownToHTML.pdb
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.GeneratedMSBuildEditorConfig.editorconfig
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.AssemblyInfoInputs.cache
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.AssemblyInfo.cs
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.csproj.CoreCompileInputs.cache
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.sourcelink.json
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.dll
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\refint\ConvertMarkdownToHTML.dll
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.pdb
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ConvertMarkdownToHTML.genruntimeconfig.cache
+c:\Development\Custom\ConvertMarkdownToHTML\obj\Debug\net8.0\ref\ConvertMarkdownToHTML.dll
