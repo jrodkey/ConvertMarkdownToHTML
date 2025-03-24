@@ -2,28 +2,12 @@ using ConvertMarkdownToHTML.conversion;
 
 namespace ConvertMarkdownToHTML.converters
 {
-    public interface IConverter
+    public interface IConverter<T, TokenConversion> where T : class 
     {
-        object Convert(object value);
-    }
+        T Convert(T value);
 
-    public abstract class Converter : IConverter
-    {
-        protected Dictionary<char, TokenConversion> Conversions { get; set;} = new Dictionary<char, TokenConversion>();
+        T Convert(T[] value);
 
-        public virtual object Convert(object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TokenConversion GetTokenConversion(char token)
-        {
-            if (Conversions.ContainsKey(token))
-            {
-                return Conversions[token];
-            }
-
-            return new EmptyTokenConversion();
-        }
+        List<TokenConversion> GetConversions();
     }
 }

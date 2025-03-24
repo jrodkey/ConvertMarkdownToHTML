@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using ConvertMarkdownToHTML.converters;
+using ConvertMarkdownToHTML.html.converters;
 
 namespace ConvertMarkdownToHTML
 {
@@ -15,6 +15,7 @@ namespace ConvertMarkdownToHTML
             Stopwatch stopwatch = Stopwatch.StartNew();
             MarkdownToHtml(inputFilePath, out outputFilePath);
             stopwatch.Stop();
+            Console.WriteLine(outputFilePath);
             Console.WriteLine(string.Format("Time: {0:00}:{1:00}:{2:00}:{3:00}:", stopwatch.Elapsed.Hours, stopwatch.Elapsed.Minutes, stopwatch.Elapsed.Seconds, stopwatch.ElapsedMilliseconds / 10));
         }
 
@@ -22,9 +23,7 @@ namespace ConvertMarkdownToHTML
         {
             HTMLConverter converter = new HTMLConverter();
             string[] loadedLines = File.ReadAllLines(inputMarkdownFilePath);
-            outputMarkdownFilePath = string.Empty;
-
-            converter.Convert(loadedLines);
+            outputMarkdownFilePath = converter.Convert(loadedLines);
         }
     }
 }
