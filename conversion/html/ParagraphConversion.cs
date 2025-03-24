@@ -6,7 +6,7 @@ namespace ConvertMarkdownToHTML.html.conversion
     {
         public ParagraphConversion()
         {
-            m_source = new List<string>{ "\n" };
+            m_source = new List<string>{ "\n", "@" };
             m_replaceStart = "<p>";
             m_replaceEnd = "</p>";
         }

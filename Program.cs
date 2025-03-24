@@ -22,7 +22,8 @@ namespace ConvertMarkdownToHTML
         public static void MarkdownToHtml(string inputMarkdownFilePath, out string outputMarkdownFilePath)
         {
             HTMLConverter converter = new HTMLConverter();
-            string[] loadedLines = File.ReadAllLines(inputMarkdownFilePath);
+            //string[] loadedLines = File.ReadAllLines(inputMarkdownFilePath);
+            string loadedLines = File.ReadAllText(inputMarkdownFilePath);
             outputMarkdownFilePath = converter.Convert(loadedLines);
         }
     }

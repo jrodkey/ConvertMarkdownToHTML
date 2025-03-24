@@ -42,7 +42,7 @@ namespace ConvertMarkdownToHTML.converters
         /// <param name="text"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public int GetTokenReplacement(int index, ReadOnlySpan<char> text, out string key)
+        public string GetTokenReplacement(int index, ReadOnlySpan<char> text)
         {
             int incrementIndex = index + 1;
             StringBuilder sb = new StringBuilder();
@@ -52,8 +52,7 @@ namespace ConvertMarkdownToHTML.converters
                 sb.Append(text[incrementIndex++]);
             }
             
-            key = sb.ToString();
-            return incrementIndex;
+            return sb.ToString();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ConvertMarkdownToHTML.html.converters
 {
     public class HTMLConverter : TextConverter
     {
-        private string m_supportConversion = @"[&#_*!]";
+        private string m_supportConversion = @"[_*!\n\r]";
 
         /// <summary>
         /// 
@@ -36,18 +36,22 @@ namespace ConvertMarkdownToHTML.html.converters
             return ConvertFromText((ReadOnlySpan<char>)string.Join(" ", value));
         }
 
-        private string ConvertFromText(ReadOnlySpan<char> text){
+        private string ConvertFromText(ReadOnlySpan<char> text)
+        {
             Regex regex= new Regex(m_supportConversion);
             StringBuilder stringBuilder = new StringBuilder();
 
             TextConversionCache.Instance.SetConverter(this);
+
+            stringBuilder.Append(TextConversionCache.Instance.Replace("@"));
+            
             for(int i = 0; i < text.Length; ++i)
             {
                 if (regex.IsMatch(text[i].ToString()))
                 {
-                    int replaceIndex = GetTokenReplacement(i, text, out string replaceString);
+                    string replaceString = GetTokenReplacement(i, text);
                     stringBuilder.Append(TextConversionCache.Instance.Replace(replaceString));
-                    i += (replaceIndex > 1) ? replaceIndex : 0;
+                    i += Math.Max(replaceString.Length - 1, 0);
                     continue;
                 }
 
