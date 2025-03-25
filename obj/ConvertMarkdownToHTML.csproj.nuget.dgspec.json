@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Development\\Custom\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj": {}
+    "d:\\Development\\Custom\\BungieProgrammingTest\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj": {}
   },
   "projects": {
-    "c:\\Development\\Custom\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj": {
+    "d:\\Development\\Custom\\BungieProgrammingTest\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Development\\Custom\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj",
+        "projectUniqueName": "d:\\Development\\Custom\\BungieProgrammingTest\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj",
         "projectName": "ConvertMarkdownToHTML",
-        "projectPath": "c:\\Development\\Custom\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj",
+        "projectPath": "d:\\Development\\Custom\\BungieProgrammingTest\\ConvertMarkdownToHTML\\ConvertMarkdownToHTML.csproj",
         "packagesPath": "C:\\Users\\jrodk\\.nuget\\packages\\",
-        "outputPath": "c:\\Development\\Custom\\ConvertMarkdownToHTML\\obj\\",
+        "outputPath": "d:\\Development\\Custom\\BungieProgrammingTest\\ConvertMarkdownToHTML\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\jrodk\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -44,7 +46,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -65,7 +68,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

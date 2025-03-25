@@ -5,6 +5,13 @@ namespace ConvertMarkdownToHTML.converters
 {
     public abstract class TextConverter : IConverter<string, TokenConversion>
     {
+        protected Dictionary<string, TokenConversion> m_conversions;
+
+        public TextConverter()
+        {
+            m_conversions = GetConversions();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -31,7 +38,7 @@ namespace ConvertMarkdownToHTML.converters
         /// 
         /// </summary>
         /// <returns></returns>
-        public virtual List<TokenConversion> GetConversions()
+        public virtual Dictionary<string, TokenConversion> GetConversions()
         {
             throw new NotImplementedException();
         }
@@ -47,12 +54,27 @@ namespace ConvertMarkdownToHTML.converters
             int incrementIndex = index + 1;
             StringBuilder sb = new StringBuilder();
             sb.Append(text[index]);
-            while((text[incrementIndex] == text[index]) && (incrementIndex < text.Length))
+            while ((text[incrementIndex] == text[index]) && (incrementIndex < text.Length))
             {
                 sb.Append(text[incrementIndex++]);
             }
-            
+
             return sb.ToString();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public string Replace(string name)
+        {
+            if (!m_conversions.ContainsKey(name))
+            {
+                return string.Empty;
+            }
+
+            return m_conversions[name].Get();
         }
     }
 }

@@ -1,4 +1,3 @@
-using ConvertMarkdownToHTML.conversion;
 
 namespace ConvertMarkdownToHTML.converters
 {
@@ -8,6 +7,6 @@ namespace ConvertMarkdownToHTML.converters
 
         T Convert(T[] value);
 
-        List<TokenConversion> GetConversions();
+        Dictionary<T, TokenConversion> GetConversions();
     }
 }
