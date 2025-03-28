@@ -1,41 +1,17 @@
 
 using System.Text;
-using System.Text.RegularExpressions;
 using ConvertMarkdownToHTML.converters;
 using ConvertMarkdownToHTML.conversion;
 
 namespace ConvertMarkdownToHTML.html.converters
 {
+    /// <summary>
+    /// Converter class that takes a Mardown document and converts it to HTML.
+    /// </summary>
     public class HTMLConverter : TextConverter
     {
-        // Custom Regex patterns
-        private const string NewlinePattern = @"[\n\r]";
-        private const string NewlineReplacementPattern = @"[#]";
-        private const string SupportedConversionsPattern = @"[_*#\n\r]";
-
         /// <summary>
-        /// 
-        /// </summary>
-        public HTMLConverter() :
-            base()
-        {
-            m_supportedConversions = SupportedConversionsPattern;
-            m_conversions = new Dictionary<string, TokenConversion>()
-            {
-                { "#",   new TokenConversion("<h1>", "</h1>") },
-                { "##",  new TokenConversion("<h2>", "</h2>") },
-                { "###", new TokenConversion("<h3>", "</h3>") },
-                { "__",  new TokenConversion("<strong>", "</strong>") },
-                { "_",   new TokenConversion("<em>", "</em>") },
-                { "*",   new TokenConversion("<em>", "</em>") },
-                { "**",  new TokenConversion("<em>", "</em>") },
-                { "::",  new TokenConversion("<p>", "</p>") },
-                { "$",   new TokenConversion("<p>", "</p>") },
-            };
-        }
-
-        /// <summary>
-        /// 
+        /// Converts the given text document.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -45,7 +21,7 @@ namespace ConvertMarkdownToHTML.html.converters
         }
 
         /// <summary>
-        /// 
+        /// Converts the given text document.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -55,98 +31,160 @@ namespace ConvertMarkdownToHTML.html.converters
         }
 
         /// <summary>
-        /// 
+        /// Converts the given text document.
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">Text document</param>
         /// <returns></returns>
         private string ConvertFromText(ReadOnlySpan<char> text)
         {
-            StringBuilder stringBuilder = new StringBuilder();
             if (text == null || text.Length == 0)
             {
                 return string.Empty;
             }
 
-            (string, int) results = GetNewlineReplacement(0, text); ;
+            StringBuilder stringBuilder = new StringBuilder();
+            (string, int) results = GetNewDoublelineReplacement(0, text);
             stringBuilder.Append(results.Item1);
             for (int i = results.Item2; i < text.Length; ++i)
             {
-                results = (IsNewline(i, text)) ? GetNewline(i, text) : GetTextReplacement(i, text);
+                results = GetNextCharacter(i, text);
+                stringBuilder.Append(results.Item1);
+
+                i += results.Item2;
                 if (results.Item2 > 1)
                 {
-                    i += results.Item2 - 1;
-                }
+                    // If more than one character needs to be skipped, then we determine if 
+                    // the next character is valid. If it is not, backup by one iteratively.
+                    if (i > 0 && text[i] != 32 && !IsValidMatch(text[i], Config.NewLineReplacementSet))
+                    {
+                        --i;
+                    }
 
-                stringBuilder.Append(results.Item1);
+
+                    /* while (i > 0)
+                    {
+                        if (text[i] == 32 || IsValidMatch(text[i], Config.NewLineReplacementPattern))
+                        {
+                            break;
+                        }
+                        --i;
+                    } */
+                }
             }
 
-            stringBuilder.Append(EOL());
+            stringBuilder.Append(Config.Retriever.EndMulitiLine());
             return stringBuilder.ToString();
         }
 
         /// <summary>
-        /// 
+        /// Processed when a single line was parsed.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="text"></param>
-        /// <param name="isCRLF"></param>
-        /// <returns></returns>
-        private (string, int) GetNewline(int index, ReadOnlySpan<char> text)
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Replacement string and the spaces that it takes</returns>
+        public override (string, int) GetNewlineSingleSpaced(int index, ReadOnlySpan<char> text)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            (string, int) results = GetTextReplacement(index, text, m_conversions["$"]);
-            stringBuilder.Append(results.Item1);
-
-            index += 3;
-
-            results = GetNewlineReplacement(index, text);
-            stringBuilder.Append(results.Item1);
-            return (stringBuilder.ToString(), 4);
+            stringBuilder.Append(Config.Retriever.EndSingleLine());
+            stringBuilder.Append(Config.LineBreak);
+            return (stringBuilder.ToString(), 1);
         }
 
         /// <summary>
-        /// 
+        /// Processed when multiple lines have been parsed.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="text"></param>
-        /// <param name="isCRLF"></param>
-        /// <returns></returns>
-        private (string, int) GetNewlineReplacement(int index, ReadOnlySpan<char> text)
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Replacement string and the spaces that it takes</returns>
+        public override (string, int) GetNewlineDoubleSpaced(int index, ReadOnlySpan<char> text)
         {
-            return (text.Length > index && IsValidMatch(text[index], NewlineReplacementPattern)) ?
-                GetTextReplacement(index, text) : GetTextReplacement(index, text, m_conversions["$"]);
-        }
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(Config.Retriever.EndMulitiLine());
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="text"></param>
-        /// <param name="isCRLF"></param>
-        /// <returns></returns>
-        private bool IsNewline(int index, ReadOnlySpan<char> text, bool isCRLF = true)
-        {
-            if (isCRLF)
+            int lineCount = 0;
+            while (true)
             {
-                return (text.Length > index + 3 &&
-                    IsValidMatch(text[index], NewlinePattern) &&
-                    IsValidMatch(text[index + 1], NewlinePattern) &&
-                    IsValidMatch(text[index + 2], NewlinePattern) &&
-                    IsValidMatch(text[index + 3], NewlinePattern));
+                if (IsValidMatch(text[index + lineCount], Config.NewLineSet) &&
+                        IsValidMatch(text[index + lineCount + 1], Config.NewLineSet))
+                {
+                    stringBuilder.Append(Config.LineBreak);
+                    lineCount += 2;
+                    continue;
+                }
+
+                break;
             }
 
-            return (text.Length > index + 1 &&
-                IsValidMatch(text[index], NewlinePattern) &&
-                IsValidMatch(text[index + 1], NewlinePattern));
+            (string, int) results = GetNewDoublelineReplacement(index + lineCount, text);
+            stringBuilder.Append(results.Item1);
+            return (stringBuilder.ToString(), lineCount);
         }
-        
+
         /// <summary>
-        /// 
+        /// Gets a custom token.
         /// </summary>
-        /// <returns></returns>
-        private string EOL()
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Replacement string, if the given text matches with the various group.</returns>
+        public override string GetCustomToken(int index, ReadOnlySpan<char> text)
         {
-            return Replace("$");
+            // Copy character
+            if (CheckToken(Config.Copy, index, text))
+            {
+                return Config.Copy;
+            }
+
+            // Ampersand character
+            if (CheckToken(Config.Ampersand, index, text))
+            {
+                return Config.Ampersand;
+            }
+
+            return "";
+        }
+
+        // <summary>
+        /// Verifies validity between the token and the given text.
+        /// </summary>
+        /// <param name="token">name of token</param>
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>True, if the two match.</returns>
+        public bool CheckToken(string token, int index, ReadOnlySpan<char> text)
+        {
+            int length = token.Length;
+            for (int i = 0; i < length; ++i)
+            {
+                if (!text[index + i].Equals(token[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns a replacement once a single line has been parsed.
+        /// </summary>
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Replacement string and the spaces that it takes</returns>
+        private (string, int) GetNewSinglelineReplacement(int index, ReadOnlySpan<char> text)
+        {
+            return GetReplacement(index, text);
+        }
+
+        /// <summary>
+        /// Returns a replacement once muliple lines have been parsed.
+        /// </summary>
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Replacement string and the spaces that it takes</returns>
+        private (string, int) GetNewDoublelineReplacement(int index, ReadOnlySpan<char> text)
+        {
+            return (text.Length > index && IsValidMatch(text[index], Config.NewLineReplacementSet)) ?
+                GetReplacement(index, text) : GetReplacement(index, text, "$");
         }
     }
 }

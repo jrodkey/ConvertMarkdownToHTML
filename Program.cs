@@ -9,6 +9,7 @@ namespace ConvertMarkdownToHTML
         {
             //BenchmarkRunner.Run(typeof(Program).Assembly);
 
+            //string inputFilePath = Path.GetFullPath("../../../resources/ExampleInput_ipsum.md");
             string inputFilePath = Path.GetFullPath("../../../resources/ExampleInput.md");
             string outputFilePath;
 
