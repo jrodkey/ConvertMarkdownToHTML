@@ -14,13 +14,11 @@ namespace ConvertMarkdownToHTML.conversion
         /// <summary>
         /// Adds the given entry to the Stack.
         /// </summary>
-        /// <param name="entry"></param>
         public string Push(T entry);
 
         /// <summary>
         /// Pops the last entry from the Stack.
         /// </summary>
-        /// <returns></returns>
         public T Pop();
 
         /// <summary>
@@ -28,7 +26,6 @@ namespace ConvertMarkdownToHTML.conversion
         //  stack and going in reverse.
         /// </summary>
         /// <param name="name">Name of the entry</param>
-        /// <returns></returns>
         public T ReversePeek(string name);
     }
 }

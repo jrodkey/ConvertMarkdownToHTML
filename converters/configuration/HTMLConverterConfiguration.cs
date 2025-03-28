@@ -3,23 +3,13 @@ using ConvertMarkdownToHTML.conversion;
 namespace ConvertMarkdownToHTML.converters.configuration
 {
     /// <summary>
-    /// Spacing between a line and multiple lines.
+    /// Defines the configuration of the Markdown to HTML converter.
     /// </summary>
-    public enum LineSpacing
-    {
-        None = 0,
-        Single,
-        Multiline
-    }
-
-    /// <summary>
-    /// Defines the configuration of the text converter.
-    /// </summary>
-    public class TextConverterConfiguration : IConverterConfiguration<TokenConversion>
+    public class HTMLConverterConfiguration : IConverterConfiguration<TokenConversion>
     {
         private TokenConversionRetriever m_conversionRetievers;
 
-        public TextConverterConfiguration()
+        public HTMLConverterConfiguration()
         {
             m_conversionRetievers = new TokenConversionRetriever(GetConversions(), NewLineReplacementSet);
         }
@@ -45,24 +35,34 @@ namespace ConvertMarkdownToHTML.converters.configuration
         public string LineBreak { get => "\n"; }
 
         /// <summary>
-        /// Gets the new line set.
+        /// Gets the new line regex set.
         /// </summary>
         public string NewLineSet { get => @"[\n\r]"; }
 
         /// <summary>
-        /// Gets the valid characters for a new line replacement pattern.
+        /// Gets the valid characters for a new line replacement regex set.
         /// </summary>
-        public string NewLineReplacementSet { get => @"[#;]"; }
+        public string NewLineReplacementSet { get => @"[#]"; }
 
         /// <summary>
-        /// Gets the supported conversions set.
+        /// Gets the valid characters regex set.
         /// </summary>
-        public string SupportedConversionSet { get => @"([_*#<\n\r])"; }
+        public string ValidCharacterSet { get => @"[A-Za-z]"; }
 
         /// <summary>
-        /// Gets the supported generalized pattern.
+        /// Gets the supported conversions regex set.
         /// </summary>
-        public string GeneralConversionsPattern { get => $"{SupportedConversionSet}|({Copy})|({Ampersand})"; }
+        public string SupportedConversionSet { get => @"[_*#<\n\r]"; }
+
+        /// <summary>
+        /// Gets the valid characters for a backtrace regex pattern.
+        /// </summary>
+        public string ValidBacktracePattern { get => $"({ValidCharacterSet})|({Copy})"; }
+
+        /// <summary>
+        /// Gets the supported generalized regex pattern.
+        /// </summary>
+        public string GeneralConversionsPattern { get => $"({SupportedConversionSet})|({Copy})|({Ampersand})"; }
 
         /// <summary>
         /// Gets the token conversion retriever.
@@ -70,9 +70,8 @@ namespace ConvertMarkdownToHTML.converters.configuration
         public TokenConversionRetriever Retriever { get { return m_conversionRetievers; } }
 
         /// <summary>
-        /// Gets the supported conversions for the specified file.
+        /// Gets the conversions used for the token retriever.
         /// </summary>
-        /// <returns></returns>
         public Dictionary<string, TokenConversion> GetConversions()
         {
             return new Dictionary<string, TokenConversion>()

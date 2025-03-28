@@ -11,39 +11,95 @@ namespace ConvertMarkdownToHTML.converters
     public abstract class TextConverter : IConverter<string, TokenConversion>
     {
         /// <summary>
+        /// Spacing between a line and multiple lines.
+        /// </summary>
+        public enum LineSpacing
+        {
+            None = 0,
+            Single,
+            Multiline
+        }
+
+        /// <summary>
         /// Gets the configuration of the text converter.
         /// </summary>
-        public TextConverterConfiguration Config { get; } = new TextConverterConfiguration();
+        public HTMLConverterConfiguration Config { get; } = new HTMLConverterConfiguration();
 
         /// <summary>
         /// Converts a string to a supported text format.
         /// </summary>
-        /// <param name="value"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        
         public virtual string Convert(string value)
         {
-            throw new NotImplementedException();
+            return ConvertFromText((ReadOnlySpan<char>)value);
         }
 
         /// <summary>
         /// Converts an string array to a supported text format.
         /// </summary>
-        /// <param name="value"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public virtual string Convert(string[] value)
         {
-            throw new NotImplementedException();
+            return ConvertFromText((ReadOnlySpan<char>)string.Join(" ", value));
         }
 
         /// <summary>
-        /// Returns a collection of token conversion objects.
+        /// Converts the given text document to supported text format.
         /// </summary>
         /// <returns></returns>
-        public virtual Dictionary<string, TokenConversion> GetConversions()
+        protected virtual string ConvertFromText(ReadOnlySpan<char> text)
         {
-            throw new NotImplementedException();
+            if (text == null || text.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            (string, int) results = GetNewDoublelineReplacement(0, text);
+            stringBuilder.Append(results.Item1);
+            for (int i = results.Item2; i < text.Length; ++i)
+            {
+                results = GetNextCharacter(i, text);
+                stringBuilder.Append(results.Item1);
+
+                if (results.Item2 > 1)
+                {
+                    // Depending on your text format, if there is no a space or a valid character after 
+                    // the advancement, then backtrack by one and continue.
+                    if (i > 0 && text[i] != 32 && IsValidMatch(text[i], Config.ValidBacktracePattern))
+                    {
+                        --i;
+                    }
+                    i += results.Item2 - 1;
+                }
+            }
+
+            stringBuilder.Append(Config.Retriever.EndMulitiLine());
+            return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Returns a replacement once a single line has been parsed.
+        /// </summary>
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Replacement string and the spaces that it takes</returns>
+        private (string, int) GetNewSinglelineReplacement(int index, ReadOnlySpan<char> text)
+        {
+            return GetReplacement(index, text);
+        }
+
+        /// <summary>
+        /// Returns a replacement once muliple lines have been parsed.
+        /// </summary>
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Replacement string and the spaces that it takes</returns>
+        private (string, int) GetNewDoublelineReplacement(int index, ReadOnlySpan<char> text)
+        {
+            return (text.Length > index && IsValidMatch(text[index], Config.NewLineReplacementSet)) ?
+                GetReplacement(index, text) : GetReplacement(index, text, "$");
         }
 
         /// <summary>
@@ -54,7 +110,13 @@ namespace ConvertMarkdownToHTML.converters
         /// <returns></returns>
         public virtual (string, int) GetNewlineSingleSpaced(int index, ReadOnlySpan<char> text)
         {
-            throw new NotImplementedException();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(Config.Retriever.EndSingleLine());
+
+            (string, int) lines = GetLineCount(index, text);
+            stringBuilder.Append(lines.Item1);
+
+            return (stringBuilder.ToString(), lines.Item2);
         }
 
         /// <summary>
@@ -65,7 +127,15 @@ namespace ConvertMarkdownToHTML.converters
         /// <returns></returns>
         public virtual (string, int) GetNewlineDoubleSpaced(int index, ReadOnlySpan<char> text)
         {
-            throw new NotImplementedException();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(Config.Retriever.EndMulitiLine());
+
+            (string, int) lines = GetLineCount(index, text);
+            stringBuilder.Append(lines.Item1);
+
+            (string, int) results = GetNewDoublelineReplacement(index + lines.Item2, text);
+            stringBuilder.Append(results.Item1);
+            return (stringBuilder.ToString(), results.Item2 + lines.Item2);
         }
 
         /// <summary>
@@ -77,6 +147,30 @@ namespace ConvertMarkdownToHTML.converters
         public virtual string GetCustomToken(int index, ReadOnlySpan<char> text)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Given the index of the start of a line, returns the number of consecutive lines.
+        /// </summary>
+        /// <param name="index">Index value</param>
+        /// <param name="text">Complete text</param>
+        /// <returns>Each line's representation and number of lines found.</returns>
+        public (string, int) GetLineCount(int index, ReadOnlySpan<char> text)
+        {
+            string linesRepresentation = string.Empty;
+            int lineCount = 0;
+            while (true)
+            {
+                if (IsValidMatch(text[index + lineCount], Config.NewLineSet))
+                {
+                    linesRepresentation += text[index + lineCount];
+                    lineCount += 1;
+                    continue;
+                }
+                break;
+            }
+
+            return (linesRepresentation, lineCount);
         }
 
         /// <summary>
@@ -98,7 +192,7 @@ namespace ConvertMarkdownToHTML.converters
                 sb.Append(text[incrementIndex++]);
             }
 
-            // Otherwise, use the customized matching with the groups.
+            // Otherwise, use the customized matching with the regex groups.
             if (sb.Length <= 1)
             {
                 string result = GetCustomToken(index, text);
@@ -200,17 +294,6 @@ namespace ConvertMarkdownToHTML.converters
         }
 
         /// <summary>
-        /// Gets a string replacement.
-        /// </summary>
-        /// <param name="index">Index value</param>
-        /// <param name="text">Complete text</param>
-        /// <returns>Replacement string and the spaces that it takes</returns>
-        public (string, int) GetReplacement(int index, ReadOnlySpan<char> text)
-        {
-            return GetReplacement(index, text, string.Empty, Config.GeneralConversionsPattern);
-        }
-
-        /// <summary>
         /// Gets a string replacement using a conversion key.
         /// </summary>
         /// <param name="index">Index value</param>
@@ -221,7 +304,7 @@ namespace ConvertMarkdownToHTML.converters
         {
             return (!string.IsNullOrEmpty(conversionKey)) ?
                 (Config.Retriever.Push(conversionKey), 0) :
-                GetReplacement(index, text, conversionKey, Config.GeneralConversionsPattern);
+                GetReplacement(index, text, conversionKey);
         }
 
         /// <summary>
@@ -229,19 +312,17 @@ namespace ConvertMarkdownToHTML.converters
         /// </summary>
         /// <param name="index">Index value</param>
         /// <param name="text">Complete text</param>
-        /// <param name="conversionKey">Token key</param>
-        /// <param name="customRegex">Regex pattern</param>
         /// <returns></returns>
-        public (string, int) GetReplacement(int index, ReadOnlySpan<char> text, string conversionKey, string customRegex)
+        public (string, int) GetReplacement(int index, ReadOnlySpan<char> text)
         {
             string newToken = text[index].ToString();
             int replacementLength = 0;
 
-            if (IsValidMatch(text[index], customRegex))
+            if (IsValidMatch(text[index], Config.GeneralConversionsPattern))
             {
                 string replacementString = GetToken(index, text);
                 newToken = GetConversion(replacementString);
-                replacementLength = replacementString.Length - 1;
+                replacementLength = replacementString.Length;
             }
 
             return (newToken, replacementLength);

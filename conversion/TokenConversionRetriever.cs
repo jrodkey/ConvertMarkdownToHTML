@@ -4,7 +4,8 @@ using System.Text.RegularExpressions;
 namespace ConvertMarkdownToHTML.conversion
 {
     /// <summary>
-    /// List of the active conversions that behaves as a list.
+    /// Defines a list of the token conversions that will become
+    /// active that behaves as a stack.
     /// </summary>
     public class TokenConversionRetriever : IRetriever<TokenConversion>
     {
@@ -22,22 +23,20 @@ namespace ConvertMarkdownToHTML.conversion
         /// <summary>
         /// Adds the conversion by the given name to the Stack.
         /// </summary>
-        /// <param name="name"></param>
-        public string Push(string name)
+        public string Push(string tokenName)
         {
-            if (!m_supportedConversions.ContainsKey(name))
+            if (!m_supportedConversions.ContainsKey(tokenName))
             {
                 return "";
             }
 
-            TokenConversion conversion = new TokenConversion(m_supportedConversions[name]);
+            TokenConversion conversion = new TokenConversion(m_supportedConversions[tokenName]);
             return Push(conversion);
         }
 
         /// <summary>
         /// Adds the given conversion to the Stack.
         /// </summary>
-        /// <param name="conversion"></param>
         public string Push(TokenConversion conversion)
         {
             Convert(conversion);
@@ -175,7 +174,6 @@ namespace ConvertMarkdownToHTML.conversion
         /// <summary>
         /// Converts the status of the conversion depending on if there is a last entry in the stack.
         /// </summary>
-        /// <param name="conversion"></param>
         private void Convert(TokenConversion conversion)
         {
             TokenConversion reverseResult = ReversePeek(conversion.Source);

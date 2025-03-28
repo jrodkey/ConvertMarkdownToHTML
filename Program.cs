@@ -7,10 +7,10 @@ namespace ConvertMarkdownToHTML
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run(typeof(Program).Assembly);
-
-            //string inputFilePath = Path.GetFullPath("../../../resources/ExampleInput_ipsum.md");
+            
             string inputFilePath = Path.GetFullPath("../../../resources/ExampleInput.md");
+            //string inputFilePath = Path.GetFullPath("../../../resources/ExampleInput_ipsum.md");
+            //string inputFilePath = Path.GetFullPath("../../../resources/ExampleInput_mixed.md");
             string outputFilePath;
 
             Stopwatch stopwatch = Stopwatch.StartNew();

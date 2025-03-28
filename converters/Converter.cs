@@ -6,7 +6,5 @@ namespace ConvertMarkdownToHTML.converters
         T Convert(T value);
 
         T Convert(T[] value);
-
-        Dictionary<T, TokenConversion> GetConversions();
     }
 }
